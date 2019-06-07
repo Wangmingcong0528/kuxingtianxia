@@ -90,7 +90,7 @@ public class FragmentCommunity extends Fragment {
                             }
                             iData.add(lData);
                             lData = new ArrayList<Event>();
-                            lData.add(new Event("Jake","记事标题","今天去了街道口", 127, 127, "街道口",new Date(),null));
+                            lData.add(new Event("stephen","记事标题","今天去了街道口", 127, 127, "街道口",new Date(),null));
                             iData.add(lData);
 
                             myAdapter = new CommunityAdapter(gData,iData,mContext);

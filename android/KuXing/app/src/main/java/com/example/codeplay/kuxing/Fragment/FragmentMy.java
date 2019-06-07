@@ -51,9 +51,12 @@ public class FragmentMy extends Fragment  {
     private ImageView Imageback;
     private TextView userName;
     private Map<String, String> data;
+    private Map<String, String> data1;
     private ArrayList<Map<String, String>> group = new ArrayList<Map<String, String>>();
+    private ArrayList<Map<String, String>> group1 = new ArrayList<Map<String, String>>();
     private Spinner spinner;
     private SharedPreferences setting;
+    private TextView signature;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_user, container, false);
@@ -65,6 +68,7 @@ public class FragmentMy extends Fragment  {
         userName.setText("codeplay");
 
         mContext = getActivity();
+        signature = view.findViewById(R.id.signature);
 
         spinner = view.findViewById(R.id.spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter
@@ -115,6 +119,7 @@ public class FragmentMy extends Fragment  {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
+                            group = new ArrayList<Map<String, String>>();
                             JSONArray res = response.getJSONArray("data");
                             for (int i = 0; i < res.length(); i++) {
                                 Map<String, String> map = new HashMap<>();
@@ -156,7 +161,38 @@ public class FragmentMy extends Fragment  {
                 Log.e("ccc", error.getMessage(), error);
             }
         }, data);
+
+        data1 = new HashMap<>();
+        data1.put("username","codeplay");
+        data1.put("token", "44c42b0bc9a88d630c0574367dc56d525cf5d161");
+        Request<JSONObject> request1 = new NormalPostRequest("http://120.79.159.186:8080/user/info",
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            group1 = new ArrayList<Map<String, String>>();
+                            JSONObject res = response.getJSONObject("data");
+                            Map<String, String> map = new HashMap<>();
+                            map.put("Id", res.getString("Id"));
+                            map.put("Username", res.getString("Username"));
+                            map.put("Signature", res.getString("Signature"));
+                            map.put("Avatar", res.getString("Avatar"));
+                            group1.add(map);
+                            signature.setText(group1.get(0).get("Signature"));
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("bbb", error.getMessage(), error);
+            }
+        }, data1);
         requestQueue.add(request);
+        requestQueue.add(request1);
+
 
         Log.i("ccc","111");
         //设置两个图片不可见
@@ -164,11 +200,6 @@ public class FragmentMy extends Fragment  {
         imageButton.setVisibility(View.INVISIBLE);
         ImageView imageView = (ImageView) view.findViewById(R.id.addfriend);
         imageView.setVisibility(View.INVISIBLE);
-
-
-
-
-
 
         return view;
     }

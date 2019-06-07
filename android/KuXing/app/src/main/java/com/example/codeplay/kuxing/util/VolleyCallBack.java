@@ -1,4 +1,4 @@
-package com.example.codeplay.kuxing;
+package com.example.codeplay.kuxing.util;
 
 import org.json.JSONObject;
 

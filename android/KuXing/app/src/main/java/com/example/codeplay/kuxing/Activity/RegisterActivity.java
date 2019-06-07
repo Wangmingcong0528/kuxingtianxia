@@ -11,9 +11,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.codeplay.kuxing.DataOfServer;
+import com.example.codeplay.kuxing.util.DataOfServer;
 import com.example.codeplay.kuxing.R;
-import com.example.codeplay.kuxing.VolleyCallBack;
+import com.example.codeplay.kuxing.util.VolleyCallBack;
 
 import org.json.JSONObject;
 

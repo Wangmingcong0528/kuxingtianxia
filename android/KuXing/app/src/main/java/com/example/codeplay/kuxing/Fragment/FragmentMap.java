@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetDialog;
 import android.util.DisplayMetrics;
@@ -43,14 +44,17 @@ import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.map.Text;
 import com.baidu.mapapi.model.LatLng;
+import com.example.codeplay.kuxing.Activity.DetailActivity;
 import com.example.codeplay.kuxing.Activity.InsertDetailActivity;
 import com.example.codeplay.kuxing.Activity.LoginActivity;
 import com.example.codeplay.kuxing.Activity.MainActivity;
+import com.example.codeplay.kuxing.Entity.Event;
 import com.example.codeplay.kuxing.R;
 import com.example.codeplay.kuxing.util.DatabaseHelper;
 import com.example.codeplay.kuxing.util.NormalPostRequest;
@@ -62,6 +66,7 @@ import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -218,6 +223,36 @@ public class FragmentMap extends Fragment implements View.OnClickListener {
         MyLocationListener myLocationListener = new MyLocationListener();
         mLocationClient.registerLocationListener(myLocationListener);
         mLocationClient.start();
+        mBaiduMap.setOnMarkerClickListener(new BaiduMap.OnMarkerClickListener() {
+            //marker被点击时回调的方法
+            //若响应点击事件，返回true，否则返回false
+            //默认返回false
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                int index = 0;
+                for (int i = 0; i < items.get(0).size(); i++) {
+                    if (items.get(0).get(i).get("Latitude") == String.valueOf(marker.getPosition().latitude)) {
+                        index = i;
+                        break;
+                    }
+                }
+                ArrayList<Bitmap> bitmaps = new ArrayList<Bitmap>();
+                Event event = new Event(
+                        items.get(0).get(index).get("Username"),
+                        items.get(0).get(index).get("Title"),
+                        items.get(0).get(index).get("Content"),
+                        Double.valueOf(items.get(0).get(index).get("Latitude")),
+                        Double.valueOf(items.get(0).get(index).get("Longitude")),
+                        items.get(0).get(index).get("Location"),
+                        (new Date(new Long(items.get(0).get(index).get("CreateTime")))),
+                        bitmaps);
+                Intent intent = new Intent(getActivity(), DetailActivity.class);
+                intent.putExtra("event", event);
+                intent.putExtra("id", items.get(0).get(index).get("Id"));
+                startActivity(intent);
+                return false;
+            }
+        });
     }
 
     public void setMapCenter(int zoom) {

@@ -70,6 +70,7 @@ public class FriendActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
+                            group = new ArrayList<Map<String, String>>();
                             JSONArray res = response.getJSONArray("data");
                             for (int i = 0; i < res.length(); i++) {
                                 Map<String, String> map = new HashMap<>();
@@ -120,15 +121,14 @@ public class FriendActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            JSONArray res = new JSONArray(response.getJSONArray("data"));
-                            for (int i = 0; i < res.length(); i++) {
-                                Map<String, String> map = new HashMap<>();
-                                map.put("Id", res.getJSONObject(i).getString("Id"));
-                                map.put("Username", res.getJSONObject(i).getString("Username"));
-                                map.put("Signature", res.getJSONObject(i).getString("Signature"));
-                                map.put("Avatar", res.getJSONObject(i).getString("Avatar"));
-                                group1.add(map);
-                            }
+                            group1 = new ArrayList<Map<String, String>>();
+                            JSONObject res = response.getJSONObject("data");
+                            Map<String, String> map = new HashMap<>();
+                            map.put("Id", res.getString("Id"));
+                            map.put("Username", res.getString("Username"));
+                            map.put("Signature", res.getString("Signature"));
+                            map.put("Avatar", res.getString("Avatar"));
+                            group1.add(map);
                             signature.setText(group1.get(0).get("Signature"));
 
                         } catch (JSONException e) {
@@ -144,6 +144,13 @@ public class FriendActivity extends AppCompatActivity {
         requestQueue.add(request);
         requestQueue.add(request1);
 
+        ImageView huitui = (ImageView) findViewById(R.id.huitui);
+        huitui.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FriendActivity.this.finish();
+            }
+        });
     }
 
     @Override
